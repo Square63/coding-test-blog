@@ -1,0 +1,14 @@
+<p><%= "User #{comment.try(:author_name)} commented:" %></p>
+<p><%= comment.description %></p>
+<div class="mt-2 ml-3">
+  <%= render partial: "comment", collection: comment.replies %>
+</div>
+<%= form_for([@post, Comment.new]) do |f| %>
+  <%= f.hidden_field :commentable_id, value: comment.id %>
+  <div class="form-group">
+    <%= f.text_area :description, class:"form-control", required: true %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Add Reply", class:"btn btn-link mt-2" %>
+  </div>
+<% end %>

@@ -3,6 +3,9 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
+import jquery from 'jquery';
+window.$ = window.jquery = jquery;
+
 import 'bootstrap'
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
@@ -12,3 +15,5 @@ import "channels"
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+

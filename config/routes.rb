@@ -2,9 +2,9 @@ Rails.application.routes.draw do
   root 'dashboard#index'
 
   resources :posts do
-    resources :comments
+    resources :comments, only: %i[show new create]
     member do
-      get :like
+      post :like
     end
   end
 

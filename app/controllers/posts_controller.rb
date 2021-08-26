@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: %i[ show edit update destroy like ]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :set_post, only: %i[show edit update destroy like]
+  before_action :verify_post_owner, only: %i[edit update destroy]
 
   # GET /posts
   def index
@@ -17,13 +19,11 @@ class PostsController < ApplicationController
   end
 
   # GET /posts/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /posts
   def create
-    @user = User.find(current_user.id)
-    @post = @user.posts.new(post_params)
+    @post = current_user.posts.new(post_params)
 
     respond_to do |format|
       if @post.save
@@ -53,6 +53,7 @@ class PostsController < ApplicationController
     end
   end
 
+  # POST /posts/1/like
   def like
     @post.likes.create(user_id: current_user.id)
     respond_to do |format|
@@ -69,5 +70,12 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:title, :image, :user_id)
+    end
+
+    # verify that only the creator of post can perform these actions
+    def verify_post_owner
+      return if current_user == @post.user
+
+      redirect_to root_path, alert: "You are not authorised"
     end
 end

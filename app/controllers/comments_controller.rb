@@ -1,16 +1,23 @@
 class CommentsController < ApplicationController
-  before_action :set_post, only: %i[ new create]
-  before_action :set_comment, only: %i[ show ]
+  before_action :set_post, only: %i[new create]
+  before_action :set_comment, only: %i[show]
 
-  # POST /comments or /comments.json
+  def new; end
+
+  def show; end
+
+  # POST /comments
   def create
     @comment = @post.comments.new(comment_params)
     @comment.author_name = current_user.email
     respond_to do |format|
-      if @comment.save
-        format.html { redirect_to @post, notice: "Comment was successfully created." }
-      else
-        format.html { redirect_to @post, alert: @comment.errors.full_messages.join(', ') }
+      format.html do
+        if @comment.save
+          flash[:notice] = "Comment was successfully created."
+        else
+          flash[:alert] = @comment.errors.full_messages.to_sentence
+        end
+        redirect_to @post
       end
     end
   end
