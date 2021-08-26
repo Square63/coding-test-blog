@@ -1,0 +1,30 @@
+<div class="container">
+
+  <div class="card" style="width: 18rem;">
+    <%= image_tag(url_for(@post.image), size: '100x100', alt: 'Post', class: 'mb-2') %>
+    <div class="card-body">
+      <h5 class="card-title">Post Title</h5>
+      <p class="card-text"><%= @post.title %></p>
+      <%= link_to 'Edit', edit_post_path(@post), class:"btn btn-warning" %> |
+      <%= link_to 'Back', posts_path, class:"btn btn-primary" %>
+      <%= link_to like_post_path(@post), remote: true do %>
+        <i class="fa fa-thumbs-up <%= @liked_post ? 'text-primary' : 'text-dark' %>" id="like_button"></i>
+      <% end %>
+      <div class="mt-2">
+        <% @post.comments.each do |comment| %>
+          <p><%= "User #{comment.try(:author_name)} commented:" %></p>
+          <p><%= comment.description %></p>
+        <% end %>
+      </div>
+      <p class="mt-2"><b>Add a comment:</b></p>
+      <%= form_for([@post, @post.comments.build]) do |f| %>        
+        <div class="form-group">
+          <%= f.text_area :description, class:"form-control", required: true %>
+        </div>
+        <div class="actions">
+          <%= f.submit "Submit", class:"btn btn-link mt-2" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
